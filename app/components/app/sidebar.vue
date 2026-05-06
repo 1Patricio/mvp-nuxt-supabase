@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
 
-const router = useRouter()
-
 const items: NavigationMenuItem[][] = [[
   {
     label: 'Home',
@@ -33,17 +31,9 @@ const items: NavigationMenuItem[][] = [[
         label: 'Notifications'
       }
     ]
-  },
-  {
-    label: 'Logout',
-    icon: 'material-symbols:logout',
-    onSelect: () => logout()
   }
 ]]
 
-function logout(){
-  router.push('/')
-}
 </script>
 
 <template>
