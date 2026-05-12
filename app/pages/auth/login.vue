@@ -1,6 +1,27 @@
+<template>
+  <div class="flex flex-col items-center justify-center gap-4 p-4">
+    <UPageCard class="w-full max-w-md">
+      <UAuthForm
+        title="Login"
+        description="Entre com suas credências de acesso."
+        icon="i-lucide-user"
+        :fields="fields"
+        :providers="providers"
+        @submit="onSubmit"
+      >
+        <template #description>
+          Não tem uma conta? 
+          <ULink to="/auth/register" class="text-primary font-medium">Cadastre-se</ULink>
+        </template>  
+      </UAuthForm>
+    </UPageCard>
+  </div>
+</template>
+
 <script setup lang="ts">
 import type {  AuthFormField } from '@nuxt/ui'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const toast = useToast()
 
 const fields: AuthFormField[] = [{
@@ -15,42 +36,9 @@ const fields: AuthFormField[] = [{
   type: 'password',
   placeholder: 'Enter your password',
   required: true
-}, {
-  name: 'remember',
-  label: 'Remember me',
-  type: 'checkbox'
-}]
+},]
 
-const providers = [{
-  label: 'Google',
-  icon: 'i-simple-icons-google',
-  onClick: () => {
-    toast.add({ title: 'Google', description: 'Login with Google' })
-  }
-}, {
-  label: 'GitHub',
-  icon: 'i-simple-icons-github',
-  onClick: () => {
-    toast.add({ title: 'GitHub', description: 'Login with GitHub' })
-  }
-}]
 function onSubmit() {
   console.log('submit')
 }
 </script>
-
-<template>
-  <div class="flex flex-col items-center justify-center gap-4 p-4">
-    <UPageCard class="w-full max-w-md">
-      <UAuthForm
-        title="Login"
-        description="Enter your credentials to access your account."
-        icon="i-lucide-user"
-        :fields="fields"
-        :providers="providers"
-        @submit="onSubmit"
-      />
-    </UPageCard>
-  </div>
-</template>
-
