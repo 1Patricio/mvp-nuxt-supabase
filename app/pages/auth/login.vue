@@ -7,7 +7,7 @@
         icon="i-lucide-user"
         :fields="fields"
         :providers="providers"
-        @submit="onSubmit"
+        @submit="loginWithEmailAndPassword"
       >
         <template #description>
           Não tem uma conta? 
@@ -19,9 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import type {  AuthFormField } from '@nuxt/ui'
+import type {  AuthFormField, FormSubmitEvent } from '@nuxt/ui'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const supabase = useSupabaseClient()
 const toast = useToast()
 
 const fields: AuthFormField[] = [{
@@ -38,7 +38,21 @@ const fields: AuthFormField[] = [{
   required: true
 },]
 
-function onSubmit() {
-  console.log('submit')
+const loginWithEmailAndPassword = async (payload: FormSubmitEvent<{email: string, password: string}>) => {
+  const { error } = await supabase.auth.signInWithPassword({
+    email: payload.data.email,
+    password: payload.data.password,
+  })
+
+  if (error) {
+    console.error(error)
+    toast.add({
+      title: 'Erro',
+      description: error.message,
+      color: 'error'
+    })
+  } else {
+    navigateTo('/app')
+  }
 }
 </script>

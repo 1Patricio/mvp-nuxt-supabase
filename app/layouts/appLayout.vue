@@ -11,7 +11,7 @@
                 variant="ghost"
                 icon="material-symbols:logout"
                 aria-label="Logout"
-                @click="logout"
+                @click="showConfirmLogout = true"
               />
             </UTooltip>
           </template>
@@ -22,13 +22,40 @@
         <slot />
       </template>
     </UDashboardPanel>
+
+    <UModal 
+      v-model:open="showConfirmLogout"
+      title="Deseja realmente desconectar?"
+      :ui="{footer: 'justify-end'}"
+    >
+      <template #footer>
+        <UButton 
+          label="Cancelar" 
+          color="neutral" 
+          variant="outline" 
+          @click="showConfirmLogout = false"
+        />
+        <UButton 
+          label="Desconectar" 
+          color="neutral" 
+          @click="logout"
+        />
+      </template>
+    </UModal>
   </UDashboardGroup>
 </template>
 
 <script setup lang="ts">
-const router = useRouter()
+const supabase = useSupabaseClient()
 
-function logout(){
-  router.push('/')
+const showConfirmLogout = ref(false)
+
+async function logout(){
+  const { error } = await supabase.auth.signOut()
+  if (error) {
+    console.error(error)
+  } else {
+    navigateTo('/auth/login')
+  }
 }
 </script>
