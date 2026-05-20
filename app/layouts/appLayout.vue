@@ -1,6 +1,7 @@
 <template>
   <UDashboardGroup>
     <AppSidebar />
+    
     <UDashboardPanel>
       <template #header>
         <UDashboardNavbar title="Dashboard">

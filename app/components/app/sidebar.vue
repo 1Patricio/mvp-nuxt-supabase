@@ -1,36 +1,18 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
 
+const user = useSupabaseUser()
+
 const items: NavigationMenuItem[][] = [[
   {
     label: 'Home',
     icon: 'i-lucide-house',
-    active: true
+    to:'/app',
   }, 
   {
-    label: 'Inbox',
-    icon: 'i-lucide-inbox',
-    badge: '4'
-  }, 
-  {
-    label: 'Contacts',
-    icon: 'i-lucide-users'
-  }, 
-  {
-    label: 'Settings',
-    icon: 'i-lucide-settings',
-    defaultOpen: true,
-    children: [
-      {
-        label: 'General'
-      }, 
-      {
-        label: 'Members'
-      }, 
-      {
-        label: 'Notifications'
-      }
-    ]
+    label: 'Categorias',
+    icon: 'material-symbols:category-outline',
+    to:'/app/category',
   }
 ]]
 
@@ -49,16 +31,11 @@ const items: NavigationMenuItem[][] = [[
         :items="items[0]"
         orientation="vertical"
       />
-
     </template>
 
     <template #footer="{ collapsed }">
       <UButton
-        :avatar="{
-          src: 'https://github.com/benjamincanac.png',
-          loading: 'lazy' as const
-        }"
-        :label="collapsed ? undefined : 'Anderson Patricio'"
+        :label="collapsed ? undefined : user.email"
         color="neutral"
         variant="ghost"
         class="w-full"
@@ -67,4 +44,3 @@ const items: NavigationMenuItem[][] = [[
     </template>
   </UDashboardSidebar>
 </template>
-
