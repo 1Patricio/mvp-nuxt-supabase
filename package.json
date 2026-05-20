@@ -17,7 +17,7 @@
     "nuxt": "^4.4.2",
     "vue": "^3.5.32",
     "vue-router": "^5.0.4",
-    "ws": "^8.20.0"
+    "ws": "^8.21.0"
   },
   "devDependencies": {
     "@types/node": "^25.7.0",
