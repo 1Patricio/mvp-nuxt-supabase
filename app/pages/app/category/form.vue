@@ -28,8 +28,11 @@ definePageMeta({
   layout: 'app-layout'
 })
 
+const client = useSupabaseClient()
+const user = useSupabaseUser()
+
 const state = reactive({
-  name: undefined,
+  name: '',
 })
 
 type Schema = typeof state
@@ -45,7 +48,26 @@ function validate(state: Partial<Schema>): FormError[] {
 
 const toast = useToast()
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  toast.add({ title: 'Success', description: 'The form has been submitted.', color: 'success' })
-  console.log(event.data)
+  
+  const { error } = await client.from('category').insert({
+    name: state.name,
+    user_id: user.value?.sub
+  })
+
+  if (error) {
+    toast.add({
+      title: 'Erro',
+      description: error.message,
+      icon: 'bx:erro',
+      color: 'error'
+    })
+  } else {
+    toast.add({ 
+      title: 'Successo', 
+      description: 'Categoria salva com sucesso', 
+      color: 'success' 
+    })
+    navigateTo('/app/category')
+  }
 }
 </script>

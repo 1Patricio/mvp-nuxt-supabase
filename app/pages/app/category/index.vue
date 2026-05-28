@@ -8,8 +8,8 @@
       </UButton>
     </div>
     <UTable
-      :data="data"
-      class="flex-1"
+      :data="categories"
+      class="flex-1 mt-2"
     />
   </div>
 </template>
@@ -19,13 +19,38 @@ definePageMeta({
   layout: 'app-layout'
 })
 
-const data = ref([
-  {
-    id: '1',
-    date: '2026-05-19',
-    status: 'ativo',
-    email: 'andersongpatricio@hotmail.com',
-    amount: 9999,
+type CategoriesList = {
+  id: number,
+  name: string,
+}
+
+
+const client = useSupabaseClient()
+const toast = useToast()
+
+const categories = ref<CategoriesList[]>([])
+
+async function getCategories() {
+  const { data, error } = await client.from('category').select()
+
+    if (error) {
+    toast.add({
+      title: 'Erro',
+      description: error.message,
+      icon: 'bx:erro',
+      color: 'error'
+    })
+  } else {
+    categories.value = data.map((category) => {
+      return {
+        id: category.id,
+        name: category.name
+      }
+    })
   }
-])
+}
+
+onMounted(async () => {
+  await getCategories()
+})
 </script>
