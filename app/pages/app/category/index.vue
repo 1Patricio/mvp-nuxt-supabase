@@ -9,6 +9,7 @@
     </div>
     <UTable
       :data="categories"
+      :loading="pending"
       class="flex-1 mt-2"
     />
   </div>
@@ -24,33 +25,26 @@ type CategoriesList = {
   name: string,
 }
 
-
 const client = useSupabaseClient()
 const toast = useToast()
 
-const categories = ref<CategoriesList[]>([])
+const { data: categories, error, pending } = await useAsyncData('categories', async () => {
+  const { data } = await client.from('category').select()
 
-async function getCategories() {
-  const { data, error } = await client.from('category').select()
+  return data?.map((cat) => {
+    return {
+      id: cat.id,
+      name: cat.name
+    }
+  })
+});
 
-    if (error) {
-    toast.add({
-      title: 'Erro',
-      description: error.message,
-      icon: 'bx:erro',
-      color: 'error'
-    })
-  } else {
-    categories.value = data.map((category) => {
-      return {
-        id: category.id,
-        name: category.name
-      }
-    })
-  }
-}
-
-onMounted(async () => {
-  await getCategories()
-})
+if (error.value) {
+  toast.add({
+    title: 'Erro',
+    description: error.value.message,
+    icon: 'bx:erro',
+    color: 'error'
+  })
+} 
 </script>
