@@ -28,12 +28,36 @@ definePageMeta({
   layout: 'app-layout'
 })
 
+const route = useRoute();
+const categoryId = computed(() => route.query.id ? Number(route.query.id) : undefined)
+
 const client = useSupabaseClient()
 const user = useSupabaseUser()
+const toast = useToast()
 
 const state = reactive({
   name: '',
 })
+
+if (categoryId.value) {
+  const { data, error } = await client
+  .from('category')
+  .select('name')
+  .eq('id', categoryId.value)
+  .single()
+
+  if (error) {
+    toast.add({
+      title: 'Erro',
+      description: error.message,
+      icon: 'bx:erro',
+      color: 'error'
+    })
+    navigateTo('/app/category')
+  } else {
+    state.name = data.name
+  }
+}
 
 type Schema = typeof state
 
@@ -46,7 +70,6 @@ function validate(state: Partial<Schema>): FormError[] {
   return errors
 }
 
-const toast = useToast()
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   
   const { error } = await client.from('category').insert({

@@ -10,12 +10,15 @@
     <UTable
       :data="categories"
       :loading="pending"
+      :ui="{ tr: 'cursor-pointer'}"
       class="flex-1 mt-2"
+      @select="editCategory"
     />
   </div>
 </template>
 
 <script setup lang="ts">
+import type { TableRow } from '@nuxt/ui'
 definePageMeta({
   layout: 'app-layout'
 })
@@ -47,4 +50,8 @@ if (error.value) {
     color: 'error'
   })
 } 
+
+function editCategory(_e: Event, row: TableRow<{ id: number; name: string }>) {
+  navigateTo(`/app/category/form?id=${row.original.id}`)
+}
 </script>
