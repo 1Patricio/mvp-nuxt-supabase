@@ -1,25 +1,39 @@
-<script setup lang="ts">
-import type { ButtonProps } from '@nuxt/ui'
+<template>
+  <UPage>
+    <UPageBody>
+      <UContainer>
+        <UBlogPosts
+          orientation="horizontal"
+          :postos="posts ?? []"
+        />
+      </UContainer>
+    </UPageBody>
+  </UPage>
+</template>
 
-const links = ref<ButtonProps[]>([
-  {
-    label: 'Get started',
-    color: 'neutral'
-  },
-  {
-    label: 'Learn more',
-    color: 'neutral',
-    variant: 'subtle',
-    trailingIcon: 'i-lucide-arrow-right'
-  }
-])
+<script setup lang="ts">
+const client = useSupabaseClient()
+
+const { data: posts } = await useAsyncData('posts', async () => {
+  const { data } = await client
+  .from('post')
+  .select('id, title, content, banner, created_at, category(name)')
+  .order('created_at', {ascending: false})
+
+  return data?.map((post) => ({
+    title: post.title,
+    description: post.content,
+    image: post.banner ? { src: post.banner, alt: post.title } : undefined,
+    date: new Date(post.crated_at).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    }),
+    badge: post.category 
+      ? { label: (post.category as { name:string }).name } 
+      : undefined,
+    to: `/post/${post.id}`  
+  }))
+})
 </script>
 
-<template>
-  <UPageCTA
-    title="Trusted and supported by our amazing community"
-    description="We've built a strong, lasting partnership. Their trust is our driving force, propelling us towards shared success."
-    variant="soft"
-    :links="links"
-  />
-</template>
