@@ -5,8 +5,12 @@
       :state="state" 
       class="space-y-4 lg:min-w-lg min-w-full" 
       @submit="onSubmit"
-
     >
+      <UFormField label="Banner" name="banner">
+        <AppFileUpload v-model="state.banner" bucket="posts" />
+      </UFormField>  
+
+
       <UFormField label="Categoria" name="category_id">
         <AppCategorySelect v-model="state.category_id" />
       </UFormField>  
@@ -47,6 +51,7 @@
 </template>
 
 <script setup lang="ts">
+import { banner } from '#build/ui';
 import type { FormError, EditorToolbarItem, FormSubmitEvent } from '@nuxt/ui'
 
 definePageMeta({
@@ -61,6 +66,7 @@ const user = useSupabaseUser()
 const toast = useToast()
 
 const state = reactive({
+  banner: null as string | null ,
   title: '',
   content: '',
   category_id: undefined as number | undefined
@@ -139,7 +145,7 @@ const items: EditorToolbarItem[][] = [
 if (postId.value) {
   const { data, error } = await client
   .from('post')
-  .select('id, title, content, category_id')
+  .select('id, title, banner, content, category_id')
   .eq('id', postId.value)
   .single()
 
@@ -155,6 +161,7 @@ if (postId.value) {
     state.title = data.title || ''
     state.content = data.content || ''
     state.category_id = data.category_id
+    state.banner = data.banner || null
   }
 }
 
@@ -171,8 +178,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   const isEdit = !!postId.value
   
   const { error } = isEdit
-  ? await client.from('post').update({title: state.title, content: state.content}).eq('id', postId.value)
+  ? await client.from('post').update({
+      banner: state.banner,
+      title: state.title, 
+      content: state.content, 
+      category_id: state.category_id as number,
+    })
+    .eq('id', postId.value)
   : await client.from('post').insert({
+    banner: state.banner,
     title: state.title,
     content: state.content, 
     category_id: state.category_id as number,
