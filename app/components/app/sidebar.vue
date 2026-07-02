@@ -13,6 +13,11 @@ const items: NavigationMenuItem[][] = [[
     label: 'Categorias',
     icon: 'material-symbols:category-outline',
     to:'/app/category',
+  },
+  {
+    label: 'Artigos',
+    icon: 'material-symbols:article-outline',
+    to:'/app/post',
   }
 ]]
 

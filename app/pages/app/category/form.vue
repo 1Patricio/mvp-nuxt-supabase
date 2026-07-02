@@ -14,7 +14,7 @@
 
         <UButton 
           type="submit"
-          label="Cadastrar"
+          :label="categoryId ? 'Atualizar' : 'Cadastrar'" 
         />
       </div>
     </UForm>
@@ -71,11 +71,11 @@ function validate(state: Partial<Schema>): FormError[] {
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  const isEdit = !!categoryId.value
   
-  const { error } = await client.from('category').insert({
-    name: state.name,
-    user_id: user.value?.sub
-  })
+  const { error } = isEdit
+  ? await client.from('category').update({name: state.name}).eq('id', categoryId.value)
+  : await client.from('category').insert({name: state.name,user_id: user.value?.sub})
 
   if (error) {
     toast.add({
@@ -87,7 +87,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   } else {
     toast.add({ 
       title: 'Successo', 
-      description: 'Categoria salva com sucesso', 
+      description: `Categoria ${ isEdit ? 'atualizada' : 'salva' } com sucesso`, 
       color: 'success' 
     })
     navigateTo('/app/category')

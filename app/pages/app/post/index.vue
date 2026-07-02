@@ -2,16 +2,16 @@
   <div>
     <div class="flex justify-end">
       <UButton
-        to="/app/category/form"
+        to="/app/post/form"
       >
-        Criar Categoria
+        Criar Artigo
       </UButton>
     </div>
     <UTable
-      :data="categories"
+      :data="posts"
       :loading="pending"
       :ui="{ tr: 'cursor-pointer'}"
-      empty="Nenhuma categoria encontrada"
+      empty="Nenhum artigo encontrado"
       class="flex-1 mt-2"
       @select="editCategory"
     />
@@ -32,15 +32,10 @@ type CategoriesList = {
 const client = useSupabaseClient()
 const toast = useToast()
 
-const { data: categories, error, pending } = await useAsyncData('categories', async () => {
-  const { data } = await client.from('category').select()
+const { data: posts, error, pending } = await useAsyncData('posts', async () => {
+  const { data } = await client.from('post').select('id, title')
 
-  return data?.map((cat) => {
-    return {
-      id: cat.id,
-      name: cat.name
-    }
-  })
+  return data! || []
 });
 
 if (error.value) {
@@ -52,7 +47,7 @@ if (error.value) {
   })
 } 
 
-function editCategory(_e: Event, row: TableRow<{ id: number; name: string }>) {
-  navigateTo(`/app/category/form?id=${row.original.id}`)
+function editCategory(_e: Event, row: TableRow<{ id: number; title: string }>) {
+  navigateTo(`/app/post/form?id=${row.original.id}`)
 }
 </script>
