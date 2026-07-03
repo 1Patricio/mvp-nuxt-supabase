@@ -4,7 +4,7 @@
       <UContainer>
         <UBlogPosts
           orientation="horizontal"
-          :postos="posts ?? []"
+          :posts="posts ?? []"
         />
       </UContainer>
     </UPageBody>
@@ -17,14 +17,14 @@ const client = useSupabaseClient()
 const { data: posts } = await useAsyncData('posts', async () => {
   const { data } = await client
   .from('post')
-  .select('id, title, content, banner, created_at, category(name)')
+  .select('id, title, resume, banner, created_at, category(name)')
   .order('created_at', {ascending: false})
 
   return data?.map((post) => ({
     title: post.title,
-    description: post.content,
+    description: post.resume || '',
     image: post.banner ? { src: post.banner, alt: post.title } : undefined,
-    date: new Date(post.crated_at).toLocaleDateString('pt-BR', {
+    date: new Date(post.created_at).toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: 'long',
       year: 'numeric'
