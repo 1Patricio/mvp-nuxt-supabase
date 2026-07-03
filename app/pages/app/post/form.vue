@@ -19,6 +19,10 @@
         <UInput v-model="state.title" class="w-full"/>
       </UFormField>
 
+      <UFormField label="Breve resumo do artigo" name="resume">
+        <UInput v-model="state.resume" class="w-full"/>
+      </UFormField>
+
       <UEditor 
         v-slot="{ editor }" 
         v-model="state.content" 
@@ -51,7 +55,6 @@
 </template>
 
 <script setup lang="ts">
-import { banner } from '#build/ui';
 import type { FormError, EditorToolbarItem, FormSubmitEvent } from '@nuxt/ui'
 
 definePageMeta({
@@ -68,8 +71,9 @@ const toast = useToast()
 const state = reactive({
   banner: null as string | null ,
   title: '',
+  resume: '',
   content: '',
-  category_id: undefined as number | undefined
+  category_id: undefined as number | undefined,
 })
 
 const items: EditorToolbarItem[][] = [
@@ -145,7 +149,7 @@ const items: EditorToolbarItem[][] = [
 if (postId.value) {
   const { data, error } = await client
   .from('post')
-  .select('id, title, banner, content, category_id')
+  .select('id, title, resume, banner, content, category_id')
   .eq('id', postId.value)
   .single()
 
@@ -159,6 +163,7 @@ if (postId.value) {
     navigateTo('/app/post')
   } else {
     state.title = data.title || ''
+    state.resume = data.resume || ''
     state.content = data.content || ''
     state.category_id = data.category_id
     state.banner = data.banner || null
@@ -170,6 +175,7 @@ type Schema = typeof state
 function validate(state: Partial<Schema>): FormError[] {
   const errors = []
   if (!state.title) errors.push({ name: 'title', message: 'Insira um nome válido' })
+  if (!state.resume) errors.push({ name: 'resume', message: 'Insira um resumo válido' })
   if (!state.category_id) errors.push({ name: 'category_id', message: 'Insira uma categoria válida' })
   return errors
 }
@@ -181,6 +187,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   ? await client.from('post').update({
       banner: state.banner,
       title: state.title, 
+      resume: state.resume,
       content: state.content, 
       category_id: state.category_id as number,
     })
@@ -188,6 +195,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   : await client.from('post').insert({
     banner: state.banner,
     title: state.title,
+    resume: state.resume,
     content: state.content, 
     category_id: state.category_id as number,
     user_id: user.value?.sub as string
