@@ -24,16 +24,14 @@ definePageMeta({
   layout: 'app-layout'
 })
 
-type CategoriesList = {
-  id: number,
-  name: string,
-}
-
 const client = useSupabaseClient()
+const user = useSupabaseUser()
 const toast = useToast()
 
 const { data: categories, error, pending } = await useAsyncData('categories', async () => {
-  const { data } = await client.from('category').select()
+  const { data } = await client.from('category')
+  .select()
+  .eq('user_id', user.value?.sub as string)
 
   return data?.map((cat) => {
     return {
