@@ -21,5 +21,13 @@ export default defineNuxtConfig({
       ],
       saveRedirectToCookie: false,
     }
+  },
+    vite: {
+    optimizeDeps: {
+      include: [
+        '@vue/devtools-core',
+        '@vue/devtools-kit',
+      ]
+    }
   }
 })
