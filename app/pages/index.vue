@@ -32,7 +32,7 @@ const { data: posts } = await useAsyncData('posts', async () => {
     badge: post.category 
       ? { label: (post.category as { name:string }).name } 
       : undefined,
-    to: `/post/${post.id}`  
+    to: `/post-details/${post.id}`  
   }))
 })
 </script>

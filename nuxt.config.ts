@@ -17,7 +17,8 @@ export default defineNuxtConfig({
       include: undefined,
       exclude: [
         '/',
-        '/auth/register'
+        '/auth/register',
+        '/post-details/*'
       ],
       saveRedirectToCookie: false,
     }

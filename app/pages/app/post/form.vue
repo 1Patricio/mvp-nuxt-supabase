@@ -26,7 +26,7 @@
       <UEditor 
         v-slot="{ editor }" 
         v-model="state.content" 
-        content-type="markdown" 
+        content-type="html" 
         class="max-w-lg min-h-40 border border-muted"
       >
         <UEditorToolbar 
