@@ -13,6 +13,17 @@
           Não tem uma conta? 
           <ULink to="/auth/register" class="text-primary font-medium">Cadastre-se</ULink>
         </template>  
+
+        <template #footer>
+          <UDivider label="ou" class="my-2" />
+          <UButton
+            block
+            variant="outline"
+            icon="i-simple-icons-github"
+            label="Entrar com github"
+            @click="loginWithGithub"
+          />
+        </template>
       </UAuthForm>
     </UPageCard>
   </div>
@@ -54,5 +65,14 @@ const loginWithEmailAndPassword = async (payload: FormSubmitEvent<{email: string
   } else {
     navigateTo('/app')
   }
+}
+
+const loginWithGithub = async () => {
+  await supabase.auth.signInWithOAuth({
+    provider: 'github',
+    options: {
+      redirectTo: `${window.location.origin}/auth/confirm`
+    }
+  })
 }
 </script>

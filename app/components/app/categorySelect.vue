@@ -10,12 +10,16 @@
 
 <script setup lang="ts">
 const client = useSupabaseClient()
+const user = useSupabaseUser()
 const toast = useToast()
 
 const model = defineModel<number | undefined>()
 
 const { data:items, pending } = await useAsyncData('categories', async () => {
-  const { data } = await client.from('category').select('id, name')
+  const { data } = await client.from('category')
+  .select('id, name')
+  .eq('user_id', user.value?.sub as string)
+
 
   return data?.map(cat => {
     return {
