@@ -35,5 +35,25 @@ const { data: posts } = await useAsyncData('posts', async () => {
     to: `/post-details/${post.id}`  
   }))
 })
+
+const meta = {
+  title: 'Dev Blog',
+  description: 'Blog criado por Devs para Devs'
+}
+
+defineOgImage('BlogName', { title: meta.title, description: meta.description })
+
+
+useSeoMeta({
+  title: meta.title,
+  ogTitle: meta.title,
+  twitterTitle: meta.title,
+  description: meta.description,
+  ogDescription: meta.description,
+  twitterDescription: meta.description,
+  // ogImage: post.value.banner,
+  // twitterImage: post.value.banner,
+  // twitterCard: 'summary_large_image',
+})
 </script>
 

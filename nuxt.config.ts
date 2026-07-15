@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/image',
     '@nuxt/ui',
-    '@nuxtjs/supabase'
+    '@nuxtjs/supabase',
+    '@nuxtjs/seo'
   ],
   css: ['~/assets/css/main.css'],
   supabase: {
@@ -23,12 +24,22 @@ export default defineNuxtConfig({
       saveRedirectToCookie: false,
     }
   },
-    vite: {
+  app:{
+    head: {
+      htmlAttrs: {
+        lang: 'pt-BR'
+      }
+    }
+  },
+  site: {
+    name: 'Dev Blog'
+  },
+  vite: {
     optimizeDeps: {
       include: [
         '@vue/devtools-core',
         '@vue/devtools-kit',
       ]
     }
-  }
+  },
 })

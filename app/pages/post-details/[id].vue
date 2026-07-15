@@ -59,4 +59,16 @@ if (postId.value) {
     post.value = data
   }
 }
+
+useSeoMeta({
+  title: post.value.title || '',
+  ogTitle: post.value.title || '',
+  twitterTitle: post.value.title || '',
+  description: post.value.resume || '',
+  ogDescription: post.value.resume || '',
+  twitterDescription: post.value.resume || '',
+  ogImage: post.value.banner,
+  twitterImage: post.value.banner,
+  twitterCard: 'summary_large_image',
+})
 </script>
