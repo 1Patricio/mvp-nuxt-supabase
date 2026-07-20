@@ -43,7 +43,6 @@ const meta = {
 
 defineOgImage('BlogName', { title: meta.title, description: meta.description })
 
-
 useSeoMeta({
   title: meta.title,
   ogTitle: meta.title,
